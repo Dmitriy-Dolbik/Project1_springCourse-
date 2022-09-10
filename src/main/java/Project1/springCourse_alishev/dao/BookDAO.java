@@ -14,25 +14,6 @@ import java.util.List;
 @Component
 
 public class BookDAO {
-    private static final String URL = "jdbc:postgresql://localhost:5432/Project1";
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "321456";
-
-    private static Connection connection;
-
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
