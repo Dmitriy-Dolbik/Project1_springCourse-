@@ -6,13 +6,13 @@ import javax.validation.constraints.Size;
 
 public class Book {
     private int book_id;
-    @NotEmpty(message = "Name should be not empty")
-    @Size(min = 1, max = 200, message = "Name should be between 2 and 200 characters")
+    @NotEmpty(message = "Название книги не должно быть пустым")
+    @Size(min = 1, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
     private String name;
-    @NotEmpty(message = "Author should be not empty")
-    @Size(min = 1, max = 100, message = "Author should be between 2 and 200 characters")
+    @NotEmpty(message = "Имя автора не должен быть пустым")
+    @Size(min = 1, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
-    @Min(value = 1920, message = "Year should be greater than 100")
+    @Min(value = 1920, message = "Год должен быть больше, чем 100")
     private int yearOfProduction;
 
     public int getBook_id() {

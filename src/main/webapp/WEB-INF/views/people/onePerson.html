@@ -7,14 +7,21 @@
 <body>
 
 <p th:text="${person.getName() + ', ' + person.getYearOfBirth()}">VALUE</p>
-<div th:if="${books.size()==0}">Человек пока не взял ни одной книги</div>
-<hr/>
 
-<p th:if="${books.size()!=0}" style="font-weight: bold">Книги:</p>
-<div th:if="${books.size()!=0}" th:each="book : ${books}">
-    <p th:text="${book.getName()+', '+book.getAuthor()+', '+book.getYearOfProduction()}">Book name</p>
+<div th:if="${books.size()==0}">
+    <p>Человек пока не взял ни одной книги</p>
+    <hr/>
 </div>
-<hr th:if="${books.size()!=0}"/>
+
+<div th:if="${books.size()!=0}">
+    <hr/>
+    <b>Книги:</b>
+    <br/>
+    <table th:each="book : ${books}">
+        <p th:text="${book.getName()+', '+book.getAuthor()+', '+book.getYearOfProduction()}">Book name</p>
+    </table>
+    <hr/>
+</div>
 
 <form th:method="GET" th:action="@{/people/{id}/edit (id=${person.getPerson_id()})}">
     <input type="submit" value="Редактировать">

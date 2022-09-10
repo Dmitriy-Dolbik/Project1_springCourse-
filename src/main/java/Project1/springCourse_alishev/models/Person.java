@@ -4,10 +4,10 @@ import javax.validation.constraints.*;
 
 public class Person {
     private int person_id;
-    @NotEmpty(message = "Name should be not empty")
-    @Size(min = 2, max = 100, message = "Name should be between 2 and 100 characters")
+    @NotEmpty(message = "Имя не должно быть пустым")
+    @Size(min = 2, max = 100, message = "Имя должно быть длиной от 2 до 100 символов")
     private String name;
-    @Min(value = 1920, message = "Year should be greater than 1920")
+    @Min(value = 1900, message = "Год рождения должен быть больше, чем 1900")
     private int yearOfBirth;
     public Person(){}
     public int getPerson_id() {

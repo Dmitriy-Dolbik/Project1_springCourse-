@@ -21,10 +21,10 @@ public class PersonDAO {
     public List<Person> showAllPeople() {
         return jdbcTemplate.query("SELECT * FROM Person", new BeanPropertyRowMapper<>(Person.class));
     }
-
-    public Optional<Person> showOnePerson(String email) {
-        return jdbcTemplate.query("SELECT * FROM Person WHERE email=?",
-                new Object[]{email}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
+    //для валидации уникальности ФИО
+    public Optional<Person> showOnePersonByFullName(String name) {
+        return jdbcTemplate.query("SELECT * FROM Person WHERE name=?",
+                new Object[]{name}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
 
     public Person showOnePerson(int person_id) {

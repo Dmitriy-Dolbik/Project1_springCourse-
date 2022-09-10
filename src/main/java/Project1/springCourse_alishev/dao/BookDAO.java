@@ -68,6 +68,7 @@ public class BookDAO {
     public void delete(int book_id){
         jdbcTemplate.update("DELETE FROM Book WHERE book_id=?", book_id);
     }
+    //назначаем или освобождаем книгу в зависимости от того свободна она или нет.
     public void assingToPerson(int book_id, int person_id){
         if (person_id!=0){
             jdbcTemplate.update("UPDATE Book SET person_id=? WHERE book_id=?",
