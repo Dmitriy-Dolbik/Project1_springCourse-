@@ -3,27 +3,33 @@ package Project1.springCourse_alishev.models;
 import javax.validation.constraints.*;
 
 public class Person {
-    private int person_id;
+    private int id;
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 100, message = "Имя должно быть длиной от 2 до 100 символов")
-    private String name;
+    private String fullName;
     @Min(value = 1900, message = "Год рождения должен быть больше, чем 1900")
     private int yearOfBirth;
     public Person(){}
-    public int getPerson_id() {
-        return person_id;
+
+    public Person(String fullName, int yearOfBirth) {
+        this.fullName = fullName;
+        this.yearOfBirth = yearOfBirth;
     }
 
-    public void setPerson_id(int person_id) {
-        this.person_id = person_id;
+    public int getId() {
+        return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public int getYearOfBirth() {
@@ -32,5 +38,14 @@ public class Person {
 
     public void setYearOfBirth(int yearOfBirth) {
         this.yearOfBirth = yearOfBirth;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", yearOfBirth=" + yearOfBirth +
+                '}';
     }
 }

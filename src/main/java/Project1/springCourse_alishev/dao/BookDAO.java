@@ -3,13 +3,12 @@ package Project1.springCourse_alishev.dao;
 import Project1.springCourse_alishev.models.Book;
 import Project1.springCourse_alishev.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.sql.*;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 
@@ -20,42 +19,41 @@ public class BookDAO {
     public BookDAO(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate=jdbcTemplate;
     }
-    public List<Book> showAllBooks(){
+    public List<Book> showAll(){
         return jdbcTemplate.query("SELECT*FROM Book", new BeanPropertyRowMapper<>(Book.class));
     }
-    public void save(Book book){
-        jdbcTemplate.update("INSERT INTO Book(name, author, year_of_production) VALUES (?,?,?)",
-                book.getName(), book.getAuthor(), book.getYearOfProduction());
-    }
-    public Book show(int book_id){
-        return jdbcTemplate.query("SELECT * FROM Book WHERE book_id=?",
-                new Object[]{book_id}, new BeanPropertyRowMapper<>(Book.class)).stream().findAny()
-                .orElse(null);
-    }
-    public void update(int book_id, Book updatedBook){
-        jdbcTemplate.update("UPDATE Book SET name=?, author=?, year_of_production=? WHERE book_id=?",
-                updatedBook.getName(), updatedBook.getAuthor(),updatedBook.getYearOfProduction(),book_id);
-
-    }
-    public Book showOneBook(int book_id){
-        return jdbcTemplate.query("SELECT * FROM Book WHERE book_id=?",
-                new Object[]{book_id}, new BeanPropertyRowMapper<>(Book.class))
+    public Book showOne(int id){
+        return jdbcTemplate.query("SELECT * FROM Book WHERE id=?",
+                        new Object[]{id}, new BeanPropertyRowMapper<>(Book.class))
                 .stream().findAny().orElse(null);
     }
-    public List<Book> showOneBookOfPerson(int person_id){
-        return jdbcTemplate.query("SELECT*FROM Book WHERE person_id=?",
-                new Object[]{person_id}, new BeanPropertyRowMapper<>(Book.class));
+    public void save(Book book){
+        jdbcTemplate.update("INSERT INTO Book(title, author, year) VALUES (?,?,?)",
+                book.getTitle(), book.getAuthor(), book.getYear());
     }
-    public void delete(int book_id){
-        jdbcTemplate.update("DELETE FROM Book WHERE book_id=?", book_id);
+    public void update(int book_id, Book updatedBook){
+        jdbcTemplate.update("UPDATE Book SET title=?, author=?, year=? WHERE id=?",
+                updatedBook.getTitle(), updatedBook.getAuthor(),updatedBook.getYear(),book_id);
+
+    }
+    public void delete(int id){
+        jdbcTemplate.update("DELETE FROM Book WHERE id=?", id);
+    }
+
+    public Optional<Person> getBookOwner(int id){
+        return jdbcTemplate.query("SELECT Person.* FROM Book JOIN Person ON Book.person_id=Person.id" +
+                        " WHERE Book.id=?",
+                new Object[]{id}, new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
+    }
+    public void release(int id){
+        jdbcTemplate.update("UPDATE Book SET person_id=null WHERE id=?",id);
     }
     //назначаем или освобождаем книгу в зависимости от того свободна она или нет.
-    public void assingToPerson(int book_id, int person_id){
-        if (person_id!=0){
-            jdbcTemplate.update("UPDATE Book SET person_id=? WHERE book_id=?",
-                    person_id, book_id);
-        } else jdbcTemplate.update("UPDATE Book SET person_id=? WHERE book_id=?", null, book_id);
+    public void assing(int id, Person selectedPerson){
+        jdbcTemplate.update("UPDATE Book SET person_id=? WHERE id=?",
+                selectedPerson.getId(), id);
     }
+
     //достаем одно значение одной колонки из таблицы (получаем book_id из запроса, передаем в SQL-запрос
     /*public Integer showPerson_id(int book_id){
         int person_id=0;

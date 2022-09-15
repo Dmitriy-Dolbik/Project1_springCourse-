@@ -5,41 +5,62 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 public class Book {
-    private int book_id;
+    private int id;
     @NotEmpty(message = "Название книги не должно быть пустым")
     @Size(min = 1, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
-    private String name;
+    private String title;
     @NotEmpty(message = "Имя автора не должен быть пустым")
     @Size(min = 1, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
     @Min(value = 1920, message = "Год должен быть больше, чем 100")
-    private int yearOfProduction;
+    private int year;
+    public Book(){}
 
-    public int getBook_id() {
-        return book_id;
+    public Book(String title, String author, int year) {
+        this.title = title;
+        this.author = author;
+        this.year = year;
     }
 
-    public void setBook_id(int book_id) {
-        this.book_id = book_id;
+    public int getId() {
+        return id;
     }
 
-    public String getName(){
-        return name;
+    public void setId(int id) {
+        this.id = id;
     }
-    public void setName(String name){
-        this.name=name;
+
+    public String getTitle() {
+        return title;
     }
-    public String getAuthor(){
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
         return author;
     }
-    public void setAuthor(String author){
-        this.author=author;
-    }
-    public int getYearOfProduction(){
-        return yearOfProduction;
-    }
-    public void setYearOfProduction (int yearOfProduction){
-        this.yearOfProduction=yearOfProduction;
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", year=" + year +
+                '}';
+    }
 }
