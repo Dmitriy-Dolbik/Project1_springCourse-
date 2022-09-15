@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+
 public class PersonDAO {
     private final JdbcTemplate jdbcTemplate;
 

@@ -1,0 +1,9 @@
+#Configuration for Data Source
+hibernate.driver_class = org.postgresql.Driver
+hibernate.connection.url =
+hibernate.connection.username =
+hibernate.connection.password =
+
+#Configuraion for Hibernate
+hibernate.dialect =org.hibernate.dialect.PostgreSQLDialect
+hibernate.show_sql=true

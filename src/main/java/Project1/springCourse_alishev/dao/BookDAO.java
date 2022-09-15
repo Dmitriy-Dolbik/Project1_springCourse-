@@ -1,14 +1,11 @@
 package Project1.springCourse_alishev.dao;
 
 import Project1.springCourse_alishev.models.Book;
-import Project1.springCourse_alishev.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.sql.*;
 import java.util.List;
 
 @Component
