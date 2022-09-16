@@ -66,5 +66,8 @@ public class BooksService {
     public List<Book> findAllBySortAndPagination(Integer page, Integer booksPerPage){
         return booksRepository.findAll(PageRequest.of(page,booksPerPage,Sort.by("year"))).getContent();
     }
+    public List<Book> findByTitleStartingWith(String startingWith){
+        return booksRepository.findByTitleStartingWith(startingWith);
+    }
 
 }

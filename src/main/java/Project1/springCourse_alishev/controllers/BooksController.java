@@ -99,4 +99,11 @@ public class BooksController {
         booksService.delete(id);
         return "redirect:/books";
     }
+    @GetMapping("/search")
+    public String search(Model model,
+                         @RequestParam(value="starting_with", required=false) String startingWith){
+        model.addAttribute("books",booksService.findByTitleStartingWith(startingWith));
+        model.addAttribute("booksNot",startingWith);
+        return "books/search";
+    }
 }
