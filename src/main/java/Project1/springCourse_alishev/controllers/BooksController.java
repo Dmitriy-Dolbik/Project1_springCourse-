@@ -4,6 +4,7 @@ import Project1.springCourse_alishev.dao.BookDAO;
 import Project1.springCourse_alishev.dao.PersonDAO;
 import Project1.springCourse_alishev.models.Book;
 import Project1.springCourse_alishev.models.Person;
+import Project1.springCourse_alishev.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +19,13 @@ import java.util.Optional;
 public class BooksController {
     private final BookDAO bookDAO;
     private final PersonDAO personDAO;
+    private final PeopleService peopleService;
 
     @Autowired
-    public BooksController(BookDAO bookDAO, PersonDAO personDAO){
+    public BooksController(BookDAO bookDAO, PersonDAO personDAO, PeopleService peopleService){
         this.bookDAO=bookDAO;
         this.personDAO=personDAO;
+        this.peopleService = peopleService;
     }
     @GetMapping()
     public String showAllBooks(Model model) {
@@ -39,7 +42,7 @@ public class BooksController {
         if (bookOwner.isPresent()) {
             model.addAttribute("owner", bookOwner.get());
         }else {
-            model.addAttribute("people", personDAO.showAllPeople());
+            model.addAttribute("people", peopleService.findAll());
         }
         return "books/oneBook";
     }

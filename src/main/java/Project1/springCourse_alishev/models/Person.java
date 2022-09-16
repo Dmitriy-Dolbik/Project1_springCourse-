@@ -1,14 +1,29 @@
 package Project1.springCourse_alishev.models;
 
-import javax.validation.constraints.*;
+import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.util.List;
+import java.util.Objects;
 
+@Entity
+@Table(name="Person")
 public class Person {
+    @Id
+    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name="full_name")
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 100, message = "Имя должно быть длиной от 2 до 100 символов")
     private String fullName;
+    @Column(name="year_of_birth")
     @Min(value = 1900, message = "Год рождения должен быть больше, чем 1900")
     private int yearOfBirth;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
+    private List<Book> books;
     public Person(){}
 
     public Person(String fullName, int yearOfBirth) {
@@ -40,6 +55,14 @@ public class Person {
         this.yearOfBirth = yearOfBirth;
     }
 
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -47,5 +70,18 @@ public class Person {
                 ", fullName='" + fullName + '\'' +
                 ", yearOfBirth=" + yearOfBirth +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return id == person.id && yearOfBirth == person.yearOfBirth && Objects.equals(fullName, person.fullName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fullName, yearOfBirth);
     }
 }

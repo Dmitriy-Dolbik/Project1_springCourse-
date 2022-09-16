@@ -1,19 +1,32 @@
 package Project1.springCourse_alishev.models;
 
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+@Entity
+@Table(name="Book")
 public class Book {
+    @Id
+    @Column(name="id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
+    @Column(name="title")
     @NotEmpty(message = "Название книги не должно быть пустым")
     @Size(min = 1, max = 100, message = "Название книги должно быть от 2 до 100 символов длиной")
     private String title;
+    @Column(name="author")
     @NotEmpty(message = "Имя автора не должен быть пустым")
     @Size(min = 1, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
+    @Column(name="year")
     @Min(value = 1920, message = "Год должен быть больше, чем 100")
     private int year;
+
+    @ManyToOne
+    @JoinColumn(name="person_id", referencedColumnName="id")
+    private Person owner;
     public Book(){}
 
     public Book(String title, String author, int year) {
@@ -53,7 +66,6 @@ public class Book {
     public void setYear(int year) {
         this.year = year;
     }
-
     @Override
     public String toString() {
         return "Book{" +
@@ -63,4 +75,5 @@ public class Book {
                 ", year=" + year +
                 '}';
     }
+
 }
