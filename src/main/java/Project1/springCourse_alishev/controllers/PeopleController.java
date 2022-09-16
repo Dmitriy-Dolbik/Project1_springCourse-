@@ -1,6 +1,5 @@
 package Project1.springCourse_alishev.controllers;
 
-import Project1.springCourse_alishev.dao.PersonDAO;
 import Project1.springCourse_alishev.models.Person;
 import Project1.springCourse_alishev.services.PeopleService;
 import Project1.springCourse_alishev.util.PersonValidator;
@@ -15,12 +14,10 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/people")
 public class PeopleController {
-    private final PersonDAO personDAO;
-    private final PersonValidator personValidator;
+     private final PersonValidator personValidator;
     private final PeopleService peopleService;
     @Autowired
-    public PeopleController(PersonDAO personDAO, PersonValidator personValidator, PeopleService peopleService) {
-        this.personDAO = personDAO;
+    public PeopleController(PersonValidator personValidator, PeopleService peopleService) {
         this.personValidator = personValidator;
         this.peopleService = peopleService;
     }

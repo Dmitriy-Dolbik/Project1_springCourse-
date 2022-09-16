@@ -4,6 +4,8 @@ import Project1.springCourse_alishev.models.Book;
 import Project1.springCourse_alishev.models.Person;
 import Project1.springCourse_alishev.repositories.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +56,15 @@ public class BooksService {
         Book book = booksRepository.findById(id).get();
         Person person = peopleService.findOne(selectedPerson.getId());
         book.setOwner(person);
+    }
+    public List<Book> findAllByPagination(Integer page, Integer booksPerPage){
+        return booksRepository.findAll(PageRequest.of(page,booksPerPage)).getContent();
+    }
+    public List<Book> findAllBySort(){
+        return booksRepository.findAll(Sort.by("year"));
+    }
+    public List<Book> findAllBySortAndPagination(Integer page, Integer booksPerPage){
+        return booksRepository.findAll(PageRequest.of(page,booksPerPage,Sort.by("year"))).getContent();
     }
 
 }

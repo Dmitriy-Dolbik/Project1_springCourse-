@@ -1,7 +1,5 @@
 package Project1.springCourse_alishev.controllers;
 
-import Project1.springCourse_alishev.dao.BookDAO;
-import Project1.springCourse_alishev.dao.PersonDAO;
 import Project1.springCourse_alishev.models.Book;
 import Project1.springCourse_alishev.models.Person;
 import Project1.springCourse_alishev.services.BooksService;
@@ -17,21 +15,28 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/books")
 public class BooksController {
-    private final BookDAO bookDAO;
-    private final PersonDAO personDAO;
     private final PeopleService peopleService;
     private final BooksService booksService;
 
     @Autowired
-    public BooksController(BookDAO bookDAO, PersonDAO personDAO, PeopleService peopleService, BooksService booksService){
-        this.bookDAO=bookDAO;
-        this.personDAO=personDAO;
+    public BooksController(PeopleService peopleService, BooksService booksService){
         this.peopleService = peopleService;
         this.booksService = booksService;
     }
     @GetMapping()
-    public String showAllBooks(Model model) {
-        model.addAttribute("books", booksService.findAll());
+    public String showAllBooks(Model model,
+                               @RequestParam(value="page", required=false) Integer page,
+                               @RequestParam(value="books_per_page", required=false) Integer booksPerPage,
+                               @RequestParam(value="sort_by_year", required=false) String sortByYear) {
+        if (page!=null && booksPerPage!=null && sortByYear==null){
+            model.addAttribute("books", booksService.findAllByPagination(page,booksPerPage));
+        }else if(sortByYear!=null && page==null && booksPerPage==null){
+            model.addAttribute("books", booksService.findAllBySort());
+        }else if(page!=null && booksPerPage!=null && sortByYear!=null){
+            model.addAttribute("books", booksService.findAllBySortAndPagination(page,booksPerPage));
+        }else {
+            model.addAttribute("books", booksService.findAll());
+        }
         return "books/allBookPages";
     }
     @GetMapping("/{id}")
