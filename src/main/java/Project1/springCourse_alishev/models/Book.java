@@ -21,7 +21,7 @@ public class Book {
     @Size(min = 1, max = 100, message = "Имя автора должно быть от 2 до 100 символов длиной")
     private String author;
     @Column(name="year")
-    @Min(value = 1920, message = "Год должен быть больше, чем 100")
+    @Min(value = 100, message = "Год должен быть больше, чем 100")
     private int year;
 
     @ManyToOne
@@ -66,6 +66,15 @@ public class Book {
     public void setYear(int year) {
         this.year = year;
     }
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
     @Override
     public String toString() {
         return "Book{" +
