@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +50,14 @@ public class BooksService {
     @Transactional
     public void release(int id){
         Book book = booksRepository.findById(id).get();
+        book.setDateOfAssignment(null);
         book.setOwner(null);
     }
     @Transactional
     public void assign(int id, Person selectedPerson){
         Book book = booksRepository.findById(id).get();
         Person person = peopleService.findOne(selectedPerson.getId());
+        book.setDateOfAssignment(Calendar.getInstance());
         book.setOwner(person);
     }
     public List<Book> findAllByPagination(Integer page, Integer booksPerPage){
@@ -68,6 +71,14 @@ public class BooksService {
     }
     public List<Book> findByTitleStartingWith(String startingWith){
         return booksRepository.findByTitleStartingWith(startingWith);
+    }
+    public boolean isAssigned(int id){
+        Book book = booksRepository.findById(id).get();
+        Calendar dayOfAssignment = book.getDateOfAssignment();
+        Calendar tenDaysAfterAssignment = dayOfAssignment;
+        tenDaysAfterAssignment.add(Calendar.DAY_OF_MONTH, 10);
+        Calendar currentDay = Calendar.getInstance();
+        return currentDay.after(tenDaysAfterAssignment);
     }
 
 }

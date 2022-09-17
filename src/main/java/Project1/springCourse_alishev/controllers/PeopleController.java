@@ -32,6 +32,7 @@ public class PeopleController {
     public String showOnePerson(@PathVariable("id") int id, Model model) {
         model.addAttribute("person", peopleService.findOne(id));
         model.addAttribute("books", peopleService.getBooksByPersonId(id));
+        peopleService.getBooksByPersonId(id).forEach(b-> System.out.println(b.isOverdue()));
         return "people/onePerson";
     }
 

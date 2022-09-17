@@ -20,5 +20,8 @@
     <hr/>
 </div>
     <tr th:if="${books.isEmpty() && booksNot!=null}">Книг не найдено</tr>
+<form th:method="GET" th:action="@{/books}">
+    <input type="submit" value="Все книги"/>
+</form>
 </body>
 </html>

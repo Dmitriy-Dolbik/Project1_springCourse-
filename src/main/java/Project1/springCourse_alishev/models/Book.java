@@ -1,9 +1,12 @@
 package Project1.springCourse_alishev.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
 
 @Entity
 @Table(name="Book")
@@ -27,6 +30,14 @@ public class Book {
     @ManyToOne
     @JoinColumn(name="person_id", referencedColumnName="id")
     private Person owner;
+
+    @Column(name="date_of_assignment")
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern="dd-MM-yyyy")
+    private Calendar dateOfAssignment;
+
+    @Transient
+    private boolean overdue;
     public Book(){}
 
     public Book(String title, String author, int year) {
@@ -73,6 +84,25 @@ public class Book {
 
     public void setOwner(Person owner) {
         this.owner = owner;
+    }
+
+    public Calendar getDateOfAssignment() {
+        return dateOfAssignment;
+    }
+
+    public void setDateOfAssignment(Calendar dateOfAssignment) {
+        this.dateOfAssignment = dateOfAssignment;
+    }
+
+    public boolean isOverdue() {
+        Calendar tenDaysAfterAssignment = dateOfAssignment;
+        tenDaysAfterAssignment.add(Calendar.DAY_OF_MONTH, 10);
+        Calendar currentDay = Calendar.getInstance();
+        return currentDay.after(tenDaysAfterAssignment);
+    }
+
+    public void setOverdue(boolean overdue) {
+        this.overdue = overdue;
     }
 
     @Override
