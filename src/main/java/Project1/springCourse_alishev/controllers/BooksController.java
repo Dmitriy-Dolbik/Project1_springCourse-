@@ -27,15 +27,11 @@ public class BooksController {
     public String showAllBooks(Model model,
                                @RequestParam(value="page", required=false) Integer page,
                                @RequestParam(value="books_per_page", required=false) Integer booksPerPage,
-                               @RequestParam(value="sort_by_year", required=false) String sortByYear) {
-        if (page!=null && booksPerPage!=null && sortByYear==null){
-            model.addAttribute("books", booksService.findAllByPagination(page,booksPerPage));
-        }else if(sortByYear!=null && page==null && booksPerPage==null){
-            model.addAttribute("books", booksService.findAllBySort());
-        }else if(page!=null && booksPerPage!=null && sortByYear!=null){
-            model.addAttribute("books", booksService.findAllBySortAndPagination(page,booksPerPage));
-        }else {
-            model.addAttribute("books", booksService.findAll());
+                               @RequestParam(value="sort_by_year", required=false) boolean sortByYear) {
+        if(page == null || booksPerPage == null){
+            model.addAttribute("books", booksService.findAll(sortByYear));
+        }else{
+            model.addAttribute("books", booksService.findAllWithPagination(page, booksPerPage, sortByYear));
         }
         return "books/allBookPages";
     }
@@ -100,10 +96,13 @@ public class BooksController {
         return "redirect:/books";
     }
     @GetMapping("/search")
-    public String search(Model model,
+    public String searchPage(){
+        return "books/search";
+    }
+    @PostMapping("/search")
+    public String makeSearch(Model model,
                          @RequestParam(value="starting_with", required=false) String startingWith){
         model.addAttribute("books",booksService.findByTitleStartingWith(startingWith));
-        model.addAttribute("booksNot",startingWith);
         return "books/search";
     }
 }

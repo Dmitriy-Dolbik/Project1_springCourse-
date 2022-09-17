@@ -95,10 +95,7 @@ public class Book {
     }
 
     public boolean isOverdue() {
-        Calendar tenDaysAfterAssignment = dateOfAssignment;
-        tenDaysAfterAssignment.add(Calendar.DAY_OF_MONTH, 10);
-        Calendar currentDay = Calendar.getInstance();
-        return currentDay.after(tenDaysAfterAssignment);
+        return overdue;
     }
 
     public void setOverdue(boolean overdue) {

@@ -18,67 +18,85 @@ import java.util.Optional;
 public class BooksService {
     private final BooksRepository booksRepository;
     private final PeopleService peopleService;
+
     @Autowired
     public BooksService(BooksRepository booksRepository, PeopleService peopleService) {
         this.booksRepository = booksRepository;
         this.peopleService = peopleService;
     }
-    public List<Book> findAll(){
-        return booksRepository.findAll();
+
+    public List<Book> findAll(boolean sortByYear) {
+        if (sortByYear) {
+            return booksRepository.findAll(Sort.by("year"));
+        } else
+            return booksRepository.findAll();
     }
-    public Book findOne(int id){
+
+    public List<Book> findAllWithPagination(Integer page, Integer booksPerPage, boolean sortByYear) {
+        if (sortByYear) {
+            return booksRepository.findAll(PageRequest.of(page, booksPerPage, Sort.by("year"))).getContent();
+        } else
+            return booksRepository.findAll(PageRequest.of(page, booksPerPage)).getContent();
+    }
+
+    public Book findOne(int id) {
         Optional<Book> book = booksRepository.findById(id);
         return book.orElse(null);
     }
+
     @Transactional
-    public void save(Book book){
+    public void save(Book book) {
         booksRepository.save(book);
     }
+
     @Transactional
-    public void update(int id, Book updatedBook){
+    public void update(int id, Book updatedBook) {
+        //достаем книгу по id из БД
+        Book bookToBeUpdated = booksRepository.findById(id).get();
+
+        //назначаем книге из формы id книги из БД
         updatedBook.setId(id);
-        booksRepository.save(updatedBook);
+        //назначаем книге из формы хозяина книги из БД
+        //т.к. пользователь не вводит хозяина, там по умолчанию лежит null
+        updatedBook.setOwner((bookToBeUpdated.getOwner()));
+        //назначаем время передачи, чтобы оно также не обнулилось при обновлении книги
+        updatedBook.setDateOfAssignment(bookToBeUpdated.getDateOfAssignment());
+
+        booksRepository.save(updatedBook);//сохраняем книгу
     }
+
     @Transactional
-    public void delete(int id){
+    public void delete(int id) {
         booksRepository.deleteById(id);
     }
-    public Person getBookOwner(int id){
+
+    public Person getBookOwner(int id) {
         Optional<Book> book = booksRepository.findById(id);
-        return book.get().getOwner();
+        return book.map(Book::getOwner).orElse(null);
+        //с помощью метода map находим владельца, если он есть, возвращем его
+        //если нет, возвращаем null
     }
+
     @Transactional
-    public void release(int id){
-        Book book = booksRepository.findById(id).get();
-        book.setDateOfAssignment(null);
-        book.setOwner(null);
+    public void release(int id) {
+        booksRepository.findById(id).ifPresent(
+                book -> {
+                    book.setDateOfAssignment(null);
+                    book.setOwner(null);
+                });
     }
+
     @Transactional
-    public void assign(int id, Person selectedPerson){
-        Book book = booksRepository.findById(id).get();
-        Person person = peopleService.findOne(selectedPerson.getId());
-        book.setDateOfAssignment(Calendar.getInstance());
-        book.setOwner(person);
+    public void assign(int id, Person selectedPerson) {
+        booksRepository.findById(id).ifPresent(
+                book -> {
+                    book.setOwner(selectedPerson);
+                    book.setDateOfAssignment((Calendar.getInstance()));
+                });
     }
-    public List<Book> findAllByPagination(Integer page, Integer booksPerPage){
-        return booksRepository.findAll(PageRequest.of(page,booksPerPage)).getContent();
-    }
-    public List<Book> findAllBySort(){
-        return booksRepository.findAll(Sort.by("year"));
-    }
-    public List<Book> findAllBySortAndPagination(Integer page, Integer booksPerPage){
-        return booksRepository.findAll(PageRequest.of(page,booksPerPage,Sort.by("year"))).getContent();
-    }
-    public List<Book> findByTitleStartingWith(String startingWith){
+
+    public List<Book> findByTitleStartingWith(String startingWith) {
         return booksRepository.findByTitleStartingWith(startingWith);
-    }
-    public boolean isAssigned(int id){
-        Book book = booksRepository.findById(id).get();
-        Calendar dayOfAssignment = book.getDateOfAssignment();
-        Calendar tenDaysAfterAssignment = dayOfAssignment;
-        tenDaysAfterAssignment.add(Calendar.DAY_OF_MONTH, 10);
-        Calendar currentDay = Calendar.getInstance();
-        return currentDay.after(tenDaysAfterAssignment);
     }
 
 }
